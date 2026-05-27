@@ -8,6 +8,16 @@
 
 **Input**: User description: "A many-to-many unlock/progression system plugin for Godot 4.6 with compound conditions, multiple data sources, and bidirectional data flow."
 
+## Clarifications
+
+### Session 2026-05-26
+
+- Q: How does the system learn about data source changes — reactive (push) or on-demand (pull)? → A: Reactive (push). Data sources emit signals on change; the system automatically re-evaluates affected conditions.
+- Q: Should the system expose partial progress toward threshold conditions? → A: Yes, at two levels. Individual condition progress (e.g., 67/100 enemies) is read from data sources. Compound condition progress (e.g., 2/3 conditions met) is computed and exposed by the unlock system itself.
+- Q: Should the plugin include debug/observability tools? → A: Lightweight only. A runtime "why locked?" query returns which conditions are met/unmet for any target. No visual graph editor in v1.
+- Q: Should the system support revocable unlocks? → A: No. All unlocks are permanent in v1. No revocation mechanism.
+- Q: How does a game's data source connect to the unlock system? → A: Register named sources. The game registers a data source by name with the unlock system, providing an object that exposes a change signal and a value getter.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Define Simple Unlock Rules (Priority: P1)
@@ -128,7 +138,7 @@ As a game designer, I want to model character upgrade trees where each character
 - What happens when a data source is not yet registered but a condition references it? The system MUST report a clear error at configuration time (editor) or evaluation time (runtime).
 - How does the system handle concurrent triggers that together satisfy a compound condition? The system MUST evaluate atomically — if two events arrive in rapid succession, the compound condition MUST resolve correctly regardless of order.
 - What happens when an unlock is granted but the target is already unlocked? The operation MUST be idempotent — no error, no duplicate reward.
-- What happens when a data source value decreases (e.g., coins spent) after an unlock was granted? Already-granted unlocks MUST remain granted (no revocation unless explicitly configured).
+- What happens when a data source value decreases (e.g., coins spent) after an unlock was granted? Already-granted unlocks MUST remain granted. No revocation mechanism exists in v1.
 - What happens when a cascade chain has more than 10 levels of depth? The system MUST resolve up to a configurable maximum depth and report an error if exceeded.
 
 ## Requirements *(mandatory)*
@@ -150,7 +160,11 @@ As a game designer, I want to model character upgrade trees where each character
 - **FR-013**: The system MUST support threshold-based conditions (e.g., "enemies killed >= 100", "coins >= 1000").
 - **FR-014**: The system MUST support boolean-state conditions (e.g., "Level 4 passed = true", "item purchased = true").
 - **FR-015**: The system MUST treat unlock operations as idempotent — unlocking an already-unlocked target produces no error and no duplicate side effects.
-- **FR-016**: Unlocks MUST be permanent by default — a decrease in the triggering value (e.g., spending coins) MUST NOT revoke a previously granted unlock.
+- **FR-016**: Unlocks MUST be permanent — a decrease in the triggering value (e.g., spending coins) MUST NOT revoke a previously granted unlock. No revocation mechanism exists in v1.
+- **FR-017**: The system MUST use a reactive (push) evaluation model — when a data source emits a change signal, the system MUST automatically re-evaluate all conditions that reference that source.
+- **FR-018**: The system MUST expose compound condition progress — for any target, the system reports how many of its conditions are met vs. total (e.g., "2/3 conditions satisfied"). Individual condition progress values (e.g., 67/100) are read through from the data source.
+- **FR-019**: The system MUST provide a "why locked?" debug query — given a target, it returns the list of conditions with their current met/unmet status and current values.
+- **FR-020**: The system MUST support named data source registration — the game registers a data source by name, providing an object that exposes a change signal and a value getter method.
 
 ### Key Entities
 
@@ -160,6 +174,7 @@ As a game designer, I want to model character upgrade trees where each character
 - **Unlock Target**: The thing being unlocked — a level, achievement, character upgrade, or any game element identified by a key.
 - **Data Source**: An external provider of game state that conditions read from and unlock effects write to. Examples: player progress tracker, currency system, in-game stats counter, ally level registry.
 - **Unlock Effect**: An action performed when an unlock is granted — writing data back to a data source (e.g., grant coins, mark achievement complete).
+- **Debug Query**: A runtime introspection mechanism that, given a target, returns the full condition tree with each condition's met/unmet status and current value.
 
 ## Success Criteria *(mandatory)*
 
