@@ -41,7 +41,7 @@ func _ready() -> void:
 1. Create a new `UnlockRule` resource (`.tres` file).
 2. Set `rule_id` to a unique string (e.g., `"unlock_level_5"`).
 3. Create a `CompoundCondition` for the `conditions` property.
-4. Add an `UnlockCondition` child: `source_name = "progress"`, `key = "level_4_passed"`, `operator = EQUALS`, `target_value = true`.
+4. Add an `UnlockCondition` child: `source_name = "progress"`, `key = "level_4_passed"`, `operator = EQ`, `target_value = true`.
 5. Set `targets` to `["level_5"]`.
 6. Save the resource and add the rule in your game's initialization.
 
@@ -52,7 +52,7 @@ func _ready() -> void:
     var condition: UnlockCondition = UnlockCondition.new()
     condition.source_name = "progress"
     condition.key = "level_4_passed"
-    condition.operator = UnlockCondition.Operator.EQUALS
+    condition.operator = UnlockCondition.Operator.EQ
     condition.target_value = true
 
     var root: CompoundCondition = CompoundCondition.new()

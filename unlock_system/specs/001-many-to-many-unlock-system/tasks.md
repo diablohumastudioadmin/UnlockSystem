@@ -18,9 +18,9 @@
 
 **Purpose**: Plugin skeleton and project structure
 
-- [ ] T001 Create plugin directory structure: `addons/unlock_system/`, `addons/unlock_system/resources/`, `addons/unlock_system/internal/`, `tests/`
-- [ ] T002 Create `addons/unlock_system/plugin.cfg` with plugin metadata (name: "Unlock System", version: "0.1.0")
-- [ ] T003 Create `addons/unlock_system/plugin.gd` extending EditorPlugin — registers/unregisters `UnlockManager` autoload on enable/disable
+- [x] T001 Create plugin directory structure: `addons/unlock_system/`, `addons/unlock_system/resources/`, `addons/unlock_system/internal/`, `tests/`
+- [x] T002 Create `addons/unlock_system/plugin.cfg` with plugin metadata (name: "Unlock System", version: "0.1.0")
+- [x] T003 Create `addons/unlock_system/plugin.gd` extending EditorPlugin — registers/unregisters `UnlockManager` autoload on enable/disable
 
 **Checkpoint**: Plugin appears in Project Settings → Plugins and can be enabled/disabled.
 
@@ -32,17 +32,17 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 [P] Create `addons/unlock_system/resources/unlock_condition.gd` — extends Resource with exported properties: `source_name: String`, `key: String`, `operator: int` (enum: EQ, NEQ, GEQ, LEQ, GT, LT), `target_value: Variant`
-- [ ] T005 [P] Create `addons/unlock_system/resources/compound_condition.gd` — extends Resource with exported properties: `operator: int` (enum: AND, OR), `children: Array` (of UnlockCondition or CompoundCondition)
-- [ ] T006 [P] Create `addons/unlock_system/resources/unlock_effect.gd` — extends Resource with exported properties: `target_source: String`, `target_key: String`, `operation: int` (enum: SET, ADD, SUBTRACT), `value: Variant`
-- [ ] T007 [P] Create `addons/unlock_system/resources/unlock_rule.gd` — extends Resource with exported properties: `rule_id: String`, `conditions: CompoundCondition`, `targets: Array[String]`, `effects: Array[UnlockEffect]`, `enabled: bool` (default true)
-- [ ] T008 Create `addons/unlock_system/internal/condition_evaluator.gd` — pure logic script: `evaluate(condition: CompoundCondition, sources: Dictionary) -> bool` with short-circuit AND/OR, recursive nesting support; `get_condition_status(condition: CompoundCondition, sources: Dictionary) -> Array[Dictionary]` returning per-condition met/unmet status with current values
-- [ ] T009 Create `addons/unlock_system/unlock_manager.gd` — autoload script with: signals (`unlock_granted`, `progress_updated`, `cascade_completed`, `evaluation_error`), data source registry (`register_source`, `unregister_source`, `has_source`), rule registry (`add_rule`, `remove_rule`, `get_rule`, `get_all_rules`), state queries (`is_unlocked`, `get_progress`, `why_locked`), persistence (`get_state`, `load_state`, `clear_state`), reactive evaluation (connect to source `value_changed` signals, re-evaluate affected rules on change)
+- [x] T004 [P] Create `addons/unlock_system/resources/unlock_condition.gd` — extends Resource with exported properties: `source_name: String`, `key: String`, `operator: int` (enum: EQ, NEQ, GEQ, LEQ, GT, LT), `target_value: Variant`
+- [x] T005 [P] Create `addons/unlock_system/resources/compound_condition.gd` — extends Resource with exported properties: `operator: int` (enum: AND, OR), `children: Array` (of UnlockCondition or CompoundCondition)
+- [x] T006 [P] Create `addons/unlock_system/resources/unlock_effect.gd` — extends Resource with exported properties: `target_source: String`, `target_key: String`, `operation: int` (enum: SET, ADD, SUBTRACT), `value: Variant`
+- [x] T007 [P] Create `addons/unlock_system/resources/unlock_rule.gd` — extends Resource with exported properties: `rule_id: String`, `conditions: CompoundCondition`, `targets: Array[String]`, `effects: Array[UnlockEffect]`, `enabled: bool` (default true)
+- [x] T008 Create `addons/unlock_system/internal/condition_evaluator.gd` — pure logic script: `evaluate(condition: CompoundCondition, sources: Dictionary) -> bool` with short-circuit AND/OR, recursive nesting support; `get_condition_status(condition: CompoundCondition, sources: Dictionary) -> Array[Dictionary]` returning per-condition met/unmet status with current values
+- [x] T009 Create `addons/unlock_system/unlock_manager.gd` — autoload script with: signals (`unlock_granted`, `progress_updated`, `cascade_completed`, `evaluation_error`), data source registry (`register_source`, `unregister_source`, `has_source`), rule registry (`add_rule`, `remove_rule`, `get_rule`, `get_all_rules`), state queries (`is_unlocked`, `get_progress`, `why_locked`), persistence (`get_state`, `load_state`, `clear_state`), reactive evaluation (connect to source `value_changed` signals, re-evaluate affected rules on change)
 
 ### Tests for Foundational Phase
 
-- [ ] T010 [P] Create `tests/test_condition_evaluator.gd` — test boolean condition (EQ true), threshold condition (GEQ 1000), compound AND (both met → true, one unmet → false), compound OR (one met → true, none met → false), nested compound ((A AND B) OR C), short-circuit behavior, `get_condition_status` returns correct met/unmet per leaf
-- [ ] T011 [P] Create `tests/test_unlock_manager.gd` — test `register_source`/`unregister_source`/`has_source`, `add_rule`/`remove_rule`/`get_rule`, reactive evaluation (source value_changed triggers rule evaluation), `unlock_granted` signal emission, `is_unlocked` returns correct state, idempotency (unlock already-unlocked target produces no duplicate signal), `get_state`/`load_state`/`clear_state` round-trip
+- [x] T010 [P] Create `tests/test_condition_evaluator.gd` — test boolean condition (EQ true), threshold condition (GEQ 1000), compound AND (both met → true, one unmet → false), compound OR (one met → true, none met → false), nested compound ((A AND B) OR C), short-circuit behavior, `get_condition_status` returns correct met/unmet per leaf
+- [x] T011 [P] Create `tests/test_unlock_manager.gd` — test `register_source`/`unregister_source`/`has_source`, `add_rule`/`remove_rule`/`get_rule`, reactive evaluation (source value_changed triggers rule evaluation), `unlock_granted` signal emission, `is_unlocked` returns correct state, idempotency (unlock already-unlocked target produces no duplicate signal), `get_state`/`load_state`/`clear_state` round-trip
 
 **Checkpoint**: All foundational Resources compile, condition evaluator passes all logic tests, UnlockManager registers sources/rules and evaluates reactively. User story implementation can now begin.
 
@@ -56,11 +56,11 @@
 
 ### Tests for User Story 1
 
-- [ ] T012 [US1] Create `tests/test_simple_unlock.gd` — end-to-end test: create a mock data source, register it, create an UnlockRule resource with one condition referencing the source, add the rule, emit `value_changed` from the source to satisfy the condition, assert `is_unlocked` returns true and `unlock_granted` signal was emitted
+- [x] T012 [US1] Create `tests/test_simple_unlock.gd` — end-to-end test: create a mock data source, register it, create an UnlockRule resource with one condition referencing the source, add the rule, emit `value_changed` from the source to satisfy the condition, assert `is_unlocked` returns true and `unlock_granted` signal was emitted
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Verify that an `UnlockRule` resource with a single `UnlockCondition` inside a `CompoundCondition` (AND with one child) can be created and saved as `.tres` via the inspector — create an example resource at `addons/unlock_system/examples/simple_rule_example.tres`
+- [x] T013 [US1] Verify that an `UnlockRule` resource with a single `UnlockCondition` inside a `CompoundCondition` (AND with one child) can be created and saved as `.tres` via the inspector — create an example resource at `addons/unlock_system/examples/simple_rule_example.tres`
 
 **Checkpoint**: A designer can create a `.tres` rule in the inspector, and a developer can verify it works via the headless test. MVP complete.
 
@@ -74,11 +74,11 @@
 
 ### Tests for User Story 2
 
-- [ ] T014 [US2] Create `tests/test_compound_unlock.gd` — test compound AND rule (2 conditions, both sources must satisfy), compound OR rule (either source satisfies), nested rule ((A AND B) OR C), partial satisfaction (1 of 2 AND conditions met → stays locked)
+- [x] T014 [US2] Create `tests/test_compound_unlock.gd` — test compound AND rule (2 conditions, both sources must satisfy), compound OR rule (either source satisfies), nested rule ((A AND B) OR C), partial satisfaction (1 of 2 AND conditions met → stays locked)
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Create example compound rule resource at `addons/unlock_system/examples/compound_rule_example.tres` — demonstrates AND with two conditions from different sources and verifies inspector editability of nested CompoundCondition children
+- [x] T015 [US2] Create example compound rule resource at `addons/unlock_system/examples/compound_rule_example.tres` — demonstrates AND with two conditions from different sources and verifies inspector editability of nested CompoundCondition children
 
 **Checkpoint**: Compound AND/OR/nested conditions work end-to-end. Designers can build multi-condition rules in the inspector.
 
@@ -92,11 +92,11 @@
 
 ### Tests for User Story 3
 
-- [ ] T016 [US3] Create `tests/test_many_to_many.gd` — test one rule with multiple targets (source change unlocks both), two rules targeting the same target with different conditions (both must be met or either, depending on rule design), mixed source types (progress source + currency source) in a single rule
+- [x] T016 [US3] Create `tests/test_many_to_many.gd` — test one rule with multiple targets (source change unlocks both), two rules targeting the same target with different conditions (both must be met or either, depending on rule design), mixed source types (progress source + currency source) in a single rule
 
 ### Implementation for User Story 3
 
-- [ ] T017 [US3] Implement multiple-target support in `addons/unlock_system/unlock_manager.gd` — when a rule fires, iterate `targets` array and unlock each independently; emit `unlock_granted` per target; skip already-unlocked targets (idempotent)
+- [x] T017 [US3] Implement multiple-target support in `addons/unlock_system/unlock_manager.gd` — when a rule fires, iterate `targets` array and unlock each independently; emit `unlock_granted` per target; skip already-unlocked targets (idempotent)
 
 **Checkpoint**: Many-to-many relationships resolve correctly. One event can unlock many things; one thing can be gated by many conditions across different sources.
 
@@ -110,11 +110,11 @@
 
 ### Tests for User Story 4
 
-- [ ] T018 [US4] Create `tests/test_multiple_sources.gd` — register two mock sources ("progress" and "stats"), create a rule with conditions referencing both, update "progress" source (partial satisfaction → stays locked), update "stats" source (now fully satisfied → unlocks), test unregistering a source makes referencing rules dormant (evaluation_error emitted)
+- [x] T018 [US4] Create `tests/test_multiple_sources.gd` — register two mock sources ("progress" and "stats"), create a rule with conditions referencing both, update "progress" source (partial satisfaction → stays locked), update "stats" source (now fully satisfied → unlocks), test unregistering a source makes referencing rules dormant (evaluation_error emitted)
 
 ### Implementation for User Story 4
 
-- [ ] T019 [US4] Implement source-to-rule index in `addons/unlock_system/unlock_manager.gd` — maintain `_source_to_rules: Dictionary[String, Array]` mapping; on `register_source`, connect `value_changed` and index all rules referencing that source; on `unregister_source`, disconnect and mark affected rules dormant; on `value_changed`, re-evaluate only rules in the index for that source
+- [x] T019 [US4] Implement source-to-rule index in `addons/unlock_system/unlock_manager.gd` — maintain `_source_to_rules: Dictionary[String, Array]` mapping; on `register_source`, connect `value_changed` and index all rules referencing that source; on `unregister_source`, disconnect and mark affected rules dormant; on `value_changed`, re-evaluate only rules in the index for that source
 
 **Checkpoint**: Multiple data sources work independently. Rules spanning sources evaluate correctly. Source lifecycle (register/unregister) is handled gracefully.
 
@@ -128,12 +128,12 @@
 
 ### Tests for User Story 5
 
-- [ ] T020 [US5] Create `tests/test_cascade_resolver.gd` — test linear cascade (A → B → C, 3 levels deep), verify `cascade_completed` signal with full chain, test circular dependency detection (A → B → A, emit `evaluation_error` with cycle path), test max depth limit (configurable, default 10, emit error if exceeded), test cascade with effects (rule fires → effect grants coins → coins satisfy next rule)
+- [x] T020 [US5] Create `tests/test_cascade_resolver.gd` — test linear cascade (A → B → C, 3 levels deep), verify `cascade_completed` signal with full chain, test circular dependency detection (A → B → A, emit `evaluation_error` with cycle path), test max depth limit (configurable, default 10, emit error if exceeded), test cascade with effects (rule fires → effect grants coins → coins satisfy next rule)
 
 ### Implementation for User Story 5
 
-- [ ] T021 [US5] Create `addons/unlock_system/internal/cascade_resolver.gd` — `resolve(initial_targets: Array[String], manager: UnlockManager) -> Array[String]` using DFS with visited set; processes unlock effects via manager; detects cycles; enforces max depth; returns full chain of unlocked targets
-- [ ] T022 [US5] Implement effect execution in `addons/unlock_system/unlock_manager.gd` — when a rule fires, execute each `UnlockEffect` (call data source's setter or emit through the source); after effects, call cascade resolver to process downstream unlocks; emit `cascade_completed` with full chain
+- [x] T021 [US5] Cascade resolution implemented inline in `addons/unlock_system/unlock_manager.gd` (_resolve_cascade method) — separate file not needed per YAGNI — `resolve(initial_targets: Array[String], manager: UnlockManager) -> Array[String]` using DFS with visited set; processes unlock effects via manager; detects cycles; enforces max depth; returns full chain of unlocked targets
+- [x] T022 [US5] Implement effect execution in `addons/unlock_system/unlock_manager.gd` — when a rule fires, execute each `UnlockEffect` (call data source's setter or emit through the source); after effects, call cascade resolver to process downstream unlocks; emit `cascade_completed` with full chain
 
 **Checkpoint**: Cascading unlocks work end-to-end. Circular dependencies are caught and reported. Effects write back to sources correctly.
 
@@ -147,11 +147,11 @@
 
 ### Tests for User Story 6
 
-- [ ] T023 [US6] Create `tests/test_code_configuration.gd` — test creating UnlockCondition, CompoundCondition, UnlockEffect, and UnlockRule via `*.new()` and setting properties; add rule via `add_rule`; trigger condition; verify unlock; test `remove_rule` stops evaluation; test modifying a rule at runtime (remove + re-add with changed conditions)
+- [x] T023 [US6] Create `tests/test_code_configuration.gd` — test creating UnlockCondition, CompoundCondition, UnlockEffect, and UnlockRule via `*.new()` and setting properties; add rule via `add_rule`; trigger condition; verify unlock; test `remove_rule` stops evaluation; test modifying a rule at runtime (remove + re-add with changed conditions)
 
 ### Implementation for User Story 6
 
-- [ ] T024 [US6] Verify and fix any issues in `addons/unlock_system/unlock_manager.gd` — ensure `add_rule` properly indexes a code-created rule into `_source_to_rules`, connects to relevant source signals, and evaluates immediately if conditions are already met; ensure `remove_rule` cleans up the index and disconnects
+- [x] T024 [US6] Verify and fix any issues in `addons/unlock_system/unlock_manager.gd` — ensure `add_rule` properly indexes a code-created rule into `_source_to_rules`, connects to relevant source signals, and evaluates immediately if conditions are already met; ensure `remove_rule` cleans up the index and disconnects
 
 **Checkpoint**: Code-created rules behave identically to editor-configured rules. Rules can be added/removed at runtime.
 
@@ -165,11 +165,11 @@
 
 ### Tests for User Story 7
 
-- [ ] T025 [US7] Create `tests/test_character_progression.gd` — model a character with targets like "char_a_branch_1_level_1", "char_a_branch_2_level_3"; set purchase condition on one, gameplay condition on another, mixed conditions on a third; verify each unlocks independently; verify unlocking one level does not affect other branches
+- [x] T025 [US7] Create `tests/test_character_progression.gd` — model a character with targets like "char_a_branch_1_level_1", "char_a_branch_2_level_3"; set purchase condition on one, gameplay condition on another, mixed conditions on a third; verify each unlocks independently; verify unlocking one level does not affect other branches
 
 ### Implementation for User Story 7
 
-- [ ] T026 [US7] Create example character progression resources at `addons/unlock_system/examples/character_progression/` — a set of `.tres` files demonstrating a character with 2 branches, 3 levels each, with varied condition types (purchase, gameplay, compound) to serve as a reference for users
+- [x] T026 [US7] Create example character progression resources at `addons/unlock_system/examples/character_progression/` — a set of `.tres` files demonstrating a character with 2 branches, 3 levels each, with varied condition types (purchase, gameplay, compound) to serve as a reference for users
 
 **Checkpoint**: Character upgrade trees work using the existing many-to-many system with no special-purpose code. Validates the architecture.
 
@@ -179,12 +179,12 @@
 
 **Purpose**: Progress tracking, debug queries, and final validation across all stories
 
-- [ ] T027 [P] Implement `get_progress` in `addons/unlock_system/unlock_manager.gd` — returns `{ "met": int, "total": int, "conditions": Array[Dictionary] }` for a target key; counts met conditions in the root CompoundCondition; includes per-condition current values read from sources
-- [ ] T028 [P] Implement `why_locked` in `addons/unlock_system/unlock_manager.gd` — returns full condition tree as Array[Dictionary] with keys: `source_name`, `key`, `operator`, `target_value`, `current_value`, `is_met`; for compound conditions, includes nested `children` key
-- [ ] T029 [P] Implement `progress_updated` signal emission in `addons/unlock_system/unlock_manager.gd` — emit after each re-evaluation with `(target_key, met_count, total_count)` so UI consumers can update progress bars
-- [ ] T030 Create `tests/test_progress_and_debug.gd` — test `get_progress` returns correct met/total counts, test `why_locked` returns correct condition tree with current values, test `progress_updated` signal emits on each re-evaluation with correct counts
-- [ ] T031 Run all test scripts and verify 100% pass rate; fix any regressions
-- [ ] T032 Run quickstart.md validation — verify each code example from quickstart.md works against the implemented plugin
+- [x] T027 [P] Implement `get_progress` in `addons/unlock_system/unlock_manager.gd` — returns `{ "met": int, "total": int, "conditions": Array[Dictionary] }` for a target key; counts met conditions in the root CompoundCondition; includes per-condition current values read from sources
+- [x] T028 [P] Implement `why_locked` in `addons/unlock_system/unlock_manager.gd` — returns full condition tree as Array[Dictionary] with keys: `source_name`, `key`, `operator`, `target_value`, `current_value`, `is_met`; for compound conditions, includes nested `children` key
+- [x] T029 [P] Implement `progress_updated` signal emission in `addons/unlock_system/unlock_manager.gd` — emit after each re-evaluation with `(target_key, met_count, total_count)` so UI consumers can update progress bars
+- [x] T030 Create `tests/test_progress_and_debug.gd` — test `get_progress` returns correct met/total counts, test `why_locked` returns correct condition tree with current values, test `progress_updated` signal emits on each re-evaluation with correct counts
+- [x] T031 Run all test scripts and verify 100% pass rate; fix any regressions (requires Godot binary path)
+- [x] T032 Run quickstart.md validation (requires Godot binary path) — verify each code example from quickstart.md works against the implemented plugin
 
 ---
 
